@@ -2,12 +2,13 @@
 <html>
 <head>
     <title>Live Math Heart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- MathJax for proper formula rendering -->
+    <!-- MathJax -->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
-         * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -18,30 +19,36 @@
             color: #ff4d6d;
             text-align: center;
             font-family: Arial, sans-serif;
-            overflow: hidden;
         }
 
         h1 {
-            font-size: clamp(20px, 5vw, 32px);
-            margin-top: 40px;
+            font-size: clamp(22px, 5vw, 34px);
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: clamp(14px, 4vw, 18px);
+            color: white;
+            margin: 10px 15px;
         }
 
         #formula {
             font-size: clamp(16px, 4vw, 22px);
-            margin: 10px 10px 0;
+            margin-top: 10px;
         }
 
         canvas {
             display: block;
-            margin: auto;
+            margin: 0px auto;
         }
     </style>
 </head>
 <body>
 
-<h1>Hellow cutiee ❤️</h1>
-<p style="color: white">As k keeps increasing, so does my love for you — infinite and beautiful 🤭</p>
-<div id="formula">
+<h1>Hello cutiee ❤️</h1>
+<p>As k keeps increasing, so does my love for you — infinite and beautiful 🤭</p>
+
+<div id="formula" >
 \( y = |x|^{\frac{2}{3}} + 0.9 \sin(kx)\sqrt{3 - x^2} \)
 </div>
 
@@ -51,10 +58,14 @@
 const canvas = document.getElementById("heartCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight - 180;
-
 let k = 1;
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight * 0.6;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 function drawHeart() {
 
@@ -64,7 +75,7 @@ function drawHeart() {
     ctx.strokeStyle = "#ff4d6d";
     ctx.lineWidth = 2;
 
-    const scale = 120;
+    const scale = Math.min(canvas.width, canvas.height) / 3.5;
 
     for (let x = -Math.sqrt(3); x <= Math.sqrt(3); x += 0.002) {
 
@@ -72,8 +83,10 @@ function drawHeart() {
             Math.pow(Math.abs(x), 2/3) +
             0.9 * Math.sin(k * x) * Math.sqrt(3 - x*x);
 
-        let canvasX = canvas.width/2 + x * scale;
-        let canvasY = canvas.height/2 - y * scale;
+        const verticalOffset = 70; // change this value
+
+let canvasX = canvas.width/2 + x * scale;
+let canvasY = canvas.height/2 + verticalOffset - y * scale;
 
         if (x === -Math.sqrt(3)) {
             ctx.moveTo(canvasX, canvasY);
@@ -84,13 +97,13 @@ function drawHeart() {
 
     ctx.stroke();
 
-    // Update formula with live k value
+    // Update formula with animated k
     document.getElementById("formula").innerHTML =
         `\\( y = |x|^{\\frac{2}{3}} + 0.9 \\sin(${k.toFixed(2)}x)\\sqrt{3 - x^2} \\)`;
 
     MathJax.typesetPromise();
 
-    k += 0.15;
+    k += 0.10;
 
     requestAnimationFrame(drawHeart);
 }
