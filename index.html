@@ -1,182 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Just One Question ❤️</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Poppins', 'Segoe UI', sans-serif;
-    }
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: radial-gradient(circle at top, #ff758f, #ff4d6d, #c9184a);
-      overflow: hidden;
-    }
+    <title>Live Math Heart</title>
 
-    .card {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 45px 35px;
-      border-radius: 25px;
-      text-align: center;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.25);
-      max-width: 380px;
-      width: 90%;
-      animation: popIn 1s ease;
-    }
+    <!-- MathJax for proper formula rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    @keyframes popIn {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    h1 {
-      color: #c9184a;
-      margin-bottom: 10px;
-      font-size: 28px;
-    }
+        body {
+            background: black;
+            color: #ff4d6d;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
 
-    h2 {
-      color: #ff4d6d;
-      font-weight: 600;
-      margin: 20px 0 30px;
-    }
+        h1 {
+            font-size: clamp(20px, 5vw, 32px);
+            margin-top: 40px;
+        }
 
-    p {
-      color: #555;
-      font-size: 15px;
-    }
+        #formula {
+            font-size: clamp(16px, 4vw, 22px);
+            margin: 10px 10px 0;
+        }
 
-    .buttons {
-      position: relative;
-      height: 70px;
-    }
-
-    button {
-      padding: 14px 34px;
-      font-size: 16px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    #yesBtn {
-      background: linear-gradient(135deg, #ff4d6d, #ff758f);
-      color: white;
-      box-shadow: 0 10px 25px rgba(255,77,109,0.5);
-    }
-
-    #yesBtn:hover {
-      transform: scale(1.08);
-    }
-
-    #noBtn {
-      background: #eee;
-      color: #555;
-      position: absolute;
-    }
-
-    /* Floating hearts */
-    .heart {
-      position: fixed;
-      bottom: -20px;
-      font-size: 22px;
-      animation: floatUp 5s linear forwards;
-      pointer-events: none;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-120vh) scale(1.8); opacity: 0; }
-    }
-
-    /* YES screen */
-    .yes-screen {
-      text-align: center;
-      color: white;
-      animation: fadeIn 1.5s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .glow {
-      font-size: 36px;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #fff, 0 0 25px #ffccd5, 0 0 45px #ff4d6d;
-    }
-
-    .quote {
-      font-size: 18px;
-      max-width: 500px;
-      line-height: 1.6;
-      padding: 0 20px;
-    }
-  </style>
+        canvas {
+            display: block;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="card" id="card">
-    <h1>Hey You ❤️</h1>
-    <p>I’ve been carrying this in my heart for a while…</p>
-    <h2>Will you be mine? 💖</h2>
+<h1>Hellow cutiee ❤️</h1>
+<p style="color: white">As k keeps increasing, so does my love for you — infinite and beautiful 🤭</p>
+<div id="formula">
+\( y = |x|^{\frac{2}{3}} + 0.9 \sin(kx)\sqrt{3 - x^2} \)
+</div>
 
-    <div class="buttons">
-      <button id="yesBtn">Yes 😍</button>
-      <button id="noBtn">No 🙈</button>
-    </div>
-  </div>
+<canvas id="heartCanvas"></canvas>
 
-  <script>
-    const noBtn = document.getElementById('noBtn');
-    const yesBtn = document.getElementById('yesBtn');
-    const card = document.getElementById('card');
+<script>
+const canvas = document.getElementById("heartCanvas");
+const ctx = canvas.getContext("2d");
 
-    noBtn.addEventListener('mouseover', () => {
-      const x = Math.random() * (window.innerWidth - 120);
-      const y = Math.random() * (window.innerHeight - 60);
-      noBtn.style.left = x + 'px';
-      noBtn.style.top = y + 'px';
-    });
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight - 180;
 
-    yesBtn.addEventListener('click', () => {
-      card.remove();
-      showYesScreen();
-      startHearts();
-    });
+let k = 1;
 
-    function showYesScreen() {
-      const screen = document.createElement('div');
-      screen.className = 'yes-screen';
-      screen.innerHTML = `
-        <div class="glow">You chose us ✨</div>
-        <div class="quote">
-          "Out of all the moments in life, this one feels like home.\n
-          If forever ever had a beginning, I’d want it to start right here — with you." 💞 ~ Sudhanshu
-        </div>
-      `;
-      document.body.appendChild(screen);
+function drawHeart() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.strokeStyle = "#ff4d6d";
+    ctx.lineWidth = 2;
+
+    const scale = 120;
+
+    for (let x = -Math.sqrt(3); x <= Math.sqrt(3); x += 0.002) {
+
+        let y =
+            Math.pow(Math.abs(x), 2/3) +
+            0.9 * Math.sin(k * x) * Math.sqrt(3 - x*x);
+
+        let canvasX = canvas.width/2 + x * scale;
+        let canvasY = canvas.height/2 - y * scale;
+
+        if (x === -Math.sqrt(3)) {
+            ctx.moveTo(canvasX, canvasY);
+        } else {
+            ctx.lineTo(canvasX, canvasY);
+        }
     }
 
-    function startHearts() {
-      setInterval(() => {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerText = ['❤️','💖','💕','💘'][Math.floor(Math.random()*4)];
-        heart.style.left = Math.random() * window.innerWidth + 'px';
-        heart.style.animationDuration = (4 + Math.random()*2) + 's';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 6000);
-      }, 200);
-    }
-  </script>
+    ctx.stroke();
+
+    // Update formula with live k value
+    document.getElementById("formula").innerHTML =
+        `\\( y = |x|^{\\frac{2}{3}} + 0.9 \\sin(${k.toFixed(2)}x)\\sqrt{3 - x^2} \\)`;
+
+    MathJax.typesetPromise();
+
+    k += 0.15;
+
+    requestAnimationFrame(drawHeart);
+}
+
+drawHeart();
+</script>
+
 </body>
 </html>
